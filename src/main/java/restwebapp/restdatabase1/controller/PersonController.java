@@ -20,7 +20,7 @@ public class PersonController {
 
 	@Autowired
 	private PersonRepository personRepository;
-	
+
 	@RequestMapping(value = "/person", method = RequestMethod.POST)
 	public ResponseEntity<Person> save(@RequestBody Person person) {
 		System.out.println("saving person" + person);
@@ -28,52 +28,69 @@ public class PersonController {
 		return new ResponseEntity<Person>(person, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/person",method = RequestMethod.GET)
+	@RequestMapping(value = "/person", method = RequestMethod.GET)
 	public ResponseEntity<List<Person>> getall() {
 		System.out.println("getting person");
 
 		List<Person> persons = (List<Person>) personRepository.findAll();
-		
+
 		ResponseEntity<List<Person>> responsetoSend = new ResponseEntity<List<Person>>(persons, HttpStatus.OK);
 		return responsetoSend;
 	}
-	
-	//   /person/anisha
-	@RequestMapping(value = "/person/{personid}",method = RequestMethod.GET)
-	public ResponseEntity<Person> getOne(@PathVariable("personid") Long pid){
-		 
-		Person person= personRepository.findOne(pid);
-		
-		
+
+	// /person/anisha
+	@RequestMapping(value = "/person/{personid}", method = RequestMethod.GET)
+	public ResponseEntity<Person> getOne(@PathVariable("personid") Long pid) {
+
+		Person person = personRepository.findOne(pid);
+
 		ResponseEntity<Person> response = new ResponseEntity<Person>(person, HttpStatus.OK);
 		return response;
-		
+
 	}
-	
+
 	@SuppressWarnings("unused")
-	@RequestMapping(value = "/person/search",method = RequestMethod.GET)
-	public ResponseEntity<List<Person>> getlastname(@RequestParam(value="lastName", required=false) String lastName, @RequestParam(value="firstName", required=false) String firstName){
-		 
+	@RequestMapping(value = "/person/search", method = RequestMethod.GET)
+	public ResponseEntity<List<Person>> getlastname(@RequestParam(value = "lastName", required = false) String lastName,
+			@RequestParam(value = "firstName", required = false) String firstName) {
+
 		List<Person> person = null;
 		System.out.println("names are: " + firstName + " , " + lastName);
-		if(lastName!=null){
-		person= personRepository.findByLastName(lastName);
+		if (lastName != null) {
+			person = personRepository.findByLastName(lastName);
+		} else if (firstName != null) {
+			person = personRepository.findByfirstName(firstName);
+		} else if (firstName != null && lastName != null) {
+			// person= personRepository.findNames(firstName,lastName);
 		}
-		else if(firstName!=null){
-	    person= personRepository.findByfirstName(firstName);
-		}
-		else if(firstName!=null && lastName!=null){
-	    //person= personRepository.findNames(firstName,lastName);
-		}
-		
+
 		ResponseEntity<List<Person>> response = new ResponseEntity<List<Person>>(person, HttpStatus.OK);
 		return response;
-		
+
 	}
+
+	@RequestMapping(value = "/person/count", method = RequestMethod.GET)
+	public ResponseEntity<Integer> getcount(@RequestParam(value = "firstName", required = false) String firstName) {
+
+		Long value = personRepository.count();
+		ResponseEntity<Integer> responsetoSend = new ResponseEntity<Integer>(value.intValue(), HttpStatus.OK);
+		return responsetoSend;
+	}
+
+	@RequestMapping(value = "/person/{personid}", method = RequestMethod.DELETE)
+	public ResponseEntity delete(@PathVariable("personid") Long pid) {
+
+		personRepository.delete(pid);
+
+		ResponseEntity response = new ResponseEntity(HttpStatus.OK);
+		return response;
+
 	
+}
+
 	@RequestMapping("/greeting")
-    public String greeting() {
-        return "hello";
-    }
+	public String greeting() {
+		return "hello";
+	}
 
 }

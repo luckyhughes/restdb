@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan("restwebapp.restdatabase1.controller")
+@ComponentScan("restwebapp.restdatabase1")
 @EnableJpaRepositories(basePackages = "restwebapp.restdatabase1.repository")
 @EntityScan("restwebapp.restdatabase1.domain")
 public class Application {
