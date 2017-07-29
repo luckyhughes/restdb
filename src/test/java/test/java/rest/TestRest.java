@@ -24,10 +24,23 @@ public class TestRest {
 
 		myObj.put("firstName", "Anisha");
 		myObj.put("lastName", "Garg");
-		given().contentType("application/json").body(myjsonString).when().post("/person").then().extract()
-				.statusCode();
+		given().contentType("application/json").body(myjsonString).when().post("/person").then().extract().statusCode();
 		String response = given().contentType("application/json").body(myjsonString).when().post("/person").then()
 				.extract().asString();
 		assertEquals(myjsonString, response);
+	}
+
+	@Test
+	public void TC3(){
+		
+		  given().contentType("application/json").body(myjsonString).when().get("http://localhost:8080/person/count").
+		then().assertThat().statusCode(200);
+		
+	}
+	
+	@Test
+	public void TC4(){
+		given().contentType("application/json").body(myjsonString).when()
+		.get("http://localhost:8080/person/{personid}").getStatusCode();
 	}
 }
